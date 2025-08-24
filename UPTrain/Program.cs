@@ -7,13 +7,13 @@ using UPTrain.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// DbContext
+
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(
         builder.Configuration.GetConnectionString("DefaultConnection")
     ));
 
-// Identity
+
 builder.Services.AddIdentity<User, IdentityRole>(options =>
 {
     options.Password.RequireDigit = true;
@@ -29,14 +29,13 @@ builder.Services.AddIdentity<User, IdentityRole>(options =>
 .AddEntityFrameworkStores<ApplicationDbContext>()
 .AddDefaultTokenProviders();
 
-// Identity Cookies
+
 builder.Services.ConfigureApplicationCookie(options =>
 {
     options.LoginPath = "/Identity/Login";
     options.AccessDeniedPath = "/Identity/AccessDenied";
 });
 
-// Repositories
 builder.Services.AddScoped<ICourseRepository, CourseRepository>();
 builder.Services.AddScoped<IPointRepository, PointRepository>();
 builder.Services.AddScoped<IBadgeRepository, BadgeRepository>();
@@ -51,14 +50,14 @@ builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
 
-// Error handling
+
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
     app.UseHsts();
 }
 
-// Middlewares
+
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
@@ -67,7 +66,7 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
-// Routes (Areas + Default)
+
 app.MapControllerRoute(
     name: "areas",
     pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
@@ -76,7 +75,7 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{area=Customer}/{controller=Home}/{action=Index}/{id?}");
 
-// ✅ Seed Data (Roles + Admin User)
+
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
