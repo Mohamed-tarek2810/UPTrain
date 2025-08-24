@@ -24,7 +24,7 @@ namespace UPTrain.Controllers
        
         public async Task<IActionResult> Details(int id)
         {
-            var lesson = await _lessonRepository.GetAsync(l => l.LessonId == id);
+            var lesson = await _lessonRepository.GetOneAsync(l => l.LessonId == id);
             if (lesson == null)
             {
                 return NotFound();

@@ -36,9 +36,21 @@ namespace UPTrain.Repositories
 
 
 
-        public async Task<T?> GetAsync(Expression<Func<T, bool>> predicate)
+        public async Task<T?> GetOneAsync( Expression<Func<T, bool>> filter, params Expression<Func<T, object>>[] includes)
         {
-            return await _dbSet.FirstOrDefaultAsync(predicate);
+            IQueryable<T> query = _dbSet;
+
+            query = query.Where(filter);
+
+            if (includes != null)
+            {
+                foreach (var include in includes)
+                {
+                    query = query.Include(include);
+                }
+            }
+
+            return await query.FirstOrDefaultAsync();
         }
 
         public async Task AddAsync(T entity)
