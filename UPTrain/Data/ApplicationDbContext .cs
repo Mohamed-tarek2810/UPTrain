@@ -10,7 +10,6 @@ namespace UPTrain.Data
         {
         }
 
-       
         public DbSet<Courses> Courses { get; set; }
         public DbSet<Point> Points { get; set; }
         public DbSet<Badge> Badges { get; set; }
@@ -20,6 +19,7 @@ namespace UPTrain.Data
         public DbSet<Certificate> Certificates { get; set; }
         public DbSet<Answer> Answers { get; set; }
         public DbSet<Question> Questions { get; set; }
+        public DbSet<UserBadge> UserBadges { get; set; }  
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -35,7 +35,20 @@ namespace UPTrain.Data
         {
             base.OnModelCreating(builder);
 
-         
+           
+            builder.Entity<UserBadge>()
+                   .HasKey(ub => new { ub.UserId, ub.BadgeId });
+
+           
+            builder.Entity<UserBadge>()
+                   .HasOne(ub => ub.User)
+                   .WithMany(u => u.UserBadges)
+                   .HasForeignKey(ub => ub.UserId);
+
+            builder.Entity<UserBadge>()
+                   .HasOne(ub => ub.Badge)
+                   .WithMany(b => b.UserBadges)
+                   .HasForeignKey(ub => ub.BadgeId);
         }
     }
 }

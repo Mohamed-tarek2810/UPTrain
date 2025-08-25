@@ -21,7 +21,7 @@ namespace UPTrain.Models
 
         [Required]
         [Display(Name = "Created By")]
-        public int CreatedBy { get; set; }
+        public string CreatedBy { get; set; }
 
         [StringLength(500)]
         public string? ImageUrl { get; set; }
