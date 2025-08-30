@@ -21,13 +21,16 @@ namespace UPTrain.Models
 
         [Required]
         [Display(Name = "Created By")]
-        public string CreatedBy { get; set; }
+        public string? CreatedBy { get; set; }
 
         [StringLength(500)]
         public string? ImageUrl { get; set; }
 
         [ForeignKey("CreatedBy")]
         public User Creator { get; set; } = null!;
+
+        public DateTime CreatedDate { get; set; }
+        public DateTime? UpdatedDate { get; set; }
 
         public ICollection<Lesson> Lessons { get; set; } = new List<Lesson>();
         public ICollection<Quiz> Quizzes { get; set; } = new List<Quiz>();

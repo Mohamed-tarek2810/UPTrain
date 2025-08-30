@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using UPTrain.IRepositories;
 using UPTrain.Models;
@@ -9,13 +10,14 @@ namespace UPTrain.Areas.Admin.Controllers
     public class CoursesController : Controller
     {
         private readonly ICourseRepository _courseRepo;
+        private readonly UserManager<User> _userManager;
 
-        public CoursesController(ICourseRepository courseRepo)
+        public CoursesController(ICourseRepository courseRepo, UserManager<User> userManager)
         {
             _courseRepo = courseRepo;
+            _userManager = userManager;
         }
 
-    
         public async Task<IActionResult> Index()
         {
             var courses = await _courseRepo.GetAllAsync(
@@ -27,6 +29,7 @@ namespace UPTrain.Areas.Admin.Controllers
 
             return View(courses);
         }
+
         [HttpGet]
         public IActionResult Create()
         {
@@ -34,10 +37,13 @@ namespace UPTrain.Areas.Admin.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Courses course)
         {
             if (ModelState.IsValid)
             {
+                course.CreatedBy = _userManager.GetUserId(User);
+
                 await _courseRepo.AddAsync(course);
                 var result = await _courseRepo.CommitAsync();
 
@@ -46,6 +52,7 @@ namespace UPTrain.Areas.Admin.Controllers
 
                 ModelState.AddModelError("", "An error occurred while saving the course.");
             }
+
             return View(course);
         }
 
@@ -59,8 +66,8 @@ namespace UPTrain.Areas.Admin.Controllers
             return View(course);
         }
 
-        
-        [HttpPost]  
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, Courses course)
         {
             if (id != course.CourseId)
@@ -79,7 +86,7 @@ namespace UPTrain.Areas.Admin.Controllers
             return View(course);
         }
 
-      
+        [HttpGet]
         public async Task<IActionResult> Delete(int id)
         {
             var course = await _courseRepo.GetOneAsync(c => c.CourseId == id);
@@ -89,9 +96,8 @@ namespace UPTrain.Areas.Admin.Controllers
             return View(course);
         }
 
-        
         [HttpPost, ActionName("Delete")]
-       
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var course = await _courseRepo.GetOneAsync(c => c.CourseId == id);
@@ -107,8 +113,5 @@ namespace UPTrain.Areas.Admin.Controllers
             ModelState.AddModelError("", "An error occurred while deleting the course.");
             return View(course);
         }
-
-
-      
     }
 }

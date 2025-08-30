@@ -32,14 +32,14 @@ namespace UPTrain.Areas.Identity.Controllers
                 {
                     FullName = registerViewModel.FullName,
                     Email = registerViewModel.Email,
-                    UserName = registerViewModel.FullName
+                    UserName = registerViewModel.Email
                 };
 
                 var result = await userManager.CreateAsync(users, registerViewModel.Password);
 
                 if (result.Succeeded)
                 {
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("Login", "Account");
                 }
                 else
                 {
@@ -67,7 +67,8 @@ namespace UPTrain.Areas.Identity.Controllers
 
                 if (result.Succeeded)
                 {
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("Index", "Home", new { area = "Customer" });
+
                 }
                 else
                 {
@@ -80,7 +81,7 @@ namespace UPTrain.Areas.Identity.Controllers
         public async Task<IActionResult> Logout()
         {
             await signInManager.SignOutAsync();
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index", "Home", new { area = "Customer" });
         }
     }
 }

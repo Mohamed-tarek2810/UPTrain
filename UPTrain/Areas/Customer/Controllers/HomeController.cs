@@ -13,7 +13,7 @@ namespace UPTrain.Areas.Customer.Controllers
         {
             _logger = logger;
         }
-
+        
         public IActionResult Index()
         {
             return View();

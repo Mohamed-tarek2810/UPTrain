@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using UPTrain.IRepositories;
 using UPTrain.Models;
 
@@ -13,7 +14,7 @@ namespace UPTrain.Areas.Customer.Controllers
         {
             _courseRepository = courseRepository;
         }
-
+        [Authorize]
         public async Task<IActionResult> Courses()
         {
             var courses = await _courseRepository.GetAllAsync();

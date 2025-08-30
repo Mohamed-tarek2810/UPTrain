@@ -16,12 +16,12 @@ namespace UPTrain.ViewModels
         [Required(ErrorMessage = "Password is required.")]
         [StringLength(40, MinimumLength = 8)]
         [DataType(DataType.Password)]
-        [Compare("ConfirmPassword", ErrorMessage = "Password does not match.")]
         public string Password { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "Confirm Password is required.")]
         [DataType(DataType.Password)]
         [Display(Name = "Confirm Password")]
+        [Compare("Password", ErrorMessage = "Password does not match.")]
         public string ConfirmPassword { get; set; } = string.Empty;
     }
 }
